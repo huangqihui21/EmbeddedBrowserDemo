@@ -111,6 +111,8 @@ signals:
     void webMsgReceived(QString msg);
     void inspectorRequested();
 
+    void browserCreated();
+
 private:
     bool loadingCefErrorPage();
     bool loadingMainFrame(CefRefPtr<CefBrowser> browser,

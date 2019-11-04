@@ -39,7 +39,7 @@ HEADERS += $$PWD/src/cef/QCefDefines.h \
     $$PWD/src/cef/QCefV8Handler.h \
     $$PWD/src/cef/QCefView.h \
     $$PWD/src/cef/QCefClient.h \
-    $$PWD/src/cef/QCefInspector.h
+    $$PWD/src/cef/QCefWindow.h
 
 SOURCES += $$PWD/src/cef/QCefJSDialogHandler.cpp \
     $$PWD/src/cef/QCefContext.cpp \
@@ -48,4 +48,4 @@ SOURCES += $$PWD/src/cef/QCefJSDialogHandler.cpp \
     $$PWD/src/cef/QCefV8Handler.cpp \
     $$PWD/src/cef/QCefView.cpp \
     $$PWD/src/cef/QCefClient.cpp \
-    $$PWD/src/cef/QCefInspector.cpp
+    $$PWD/src/cef/QCefWindow.cpp

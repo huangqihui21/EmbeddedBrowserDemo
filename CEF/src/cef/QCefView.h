@@ -1,4 +1,4 @@
-#ifndef QCEFVIEW_H
+﻿#ifndef QCEFVIEW_H
 #define QCEFVIEW_H
 
 #include <QWidget>
@@ -9,24 +9,23 @@
 #include <QString>
 
 #include "QCefApp.h"
+#include "qcefwindow.h"
 
 class QCefView : public QWidget
 {
     Q_OBJECT
 public:
-    explicit QCefView(CefRefPtr<QCefClient> cefClient, QWidget *parent = 0);
+    explicit QCefView(QWidget *parent = 0);
     virtual ~QCefView();
 
 signals:
-    void cefEmbedded();
     void loadStarted(bool isMainFrame);
     void loadFinished(bool ok, bool isMainFrame);
     void loadError(QString errorStr);
     void webMsgReceived(QString msg);
     void inspectorRequested();
 
-protected slots:
-    virtual void onCefTimer();
+
 
 public:
     void load(QUrl url);
@@ -36,8 +35,9 @@ public:
 
 protected:
     CefRefPtr<QCefClient> m_cefClient;
-    bool m_cefEmbedded;
-    QTimer* m_cefTimer;
+
+private:
+    QCefWindow* m_cefWindow;
 };
 
 #endif // QCEFVIEW_H

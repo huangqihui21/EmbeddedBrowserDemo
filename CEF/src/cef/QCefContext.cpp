@@ -6,18 +6,40 @@
 */
 
 #include "QCefContext.h"
+#include <QDir>
+#include <windows.h>
 
+QCefContext *QCefContext::_instance = nullptr;
 
-QCefContext::QCefContext(CefSettings* settings)
+QCefContext::QCefContext()
 {
-    m_cefApp = NULL;
-    m_cefRenderer = NULL;
-    m_cmdLine = NULL;
-    m_settings = settings;
+    m_cefApp = nullptr;
+    m_cefRenderer = nullptr;
+    m_cmdLine = nullptr;
+
+    WCHAR curDir[MAX_PATH];
+    GetCurrentDirectory(MAX_PATH, curDir);
+
+    QString resource_path = QString::fromStdWString(curDir);
+    resource_path += "/resources";
+    resource_path = QDir::toNativeSeparators(resource_path);
+
+    QString locales_path = resource_path + "/locales";
+    locales_path = QDir::toNativeSeparators(locales_path);
+
+    // Completely disable logging.
+    m_settings.log_severity = LOGSEVERITY_DEFAULT;
+    // The resources(cef.pak and/or devtools_resources.pak) directory.
+    CefString(&m_settings.resources_dir_path) = CefString(resource_path.toLocal8Bit());
+    // The locales directory.
+    CefString(&m_settings.locales_dir_path) = CefString(locales_path.toLocal8Bit());
+    m_settings.remote_debugging_port = 7777;
+    m_settings.multi_threaded_message_loop = TRUE;
 }
 
 QCefContext::~QCefContext()
 {
+
 }
 
 
@@ -81,7 +103,7 @@ int QCefContext::initCef(CefMainArgs& mainArgs)
     }
 
     // Initialize CEF for the browser process.
-    CefInitialize(mainArgs, *m_settings, app.get(), NULL);
+    CefInitialize(mainArgs, m_settings, app.get(), NULL);
 
     return -1;
 }

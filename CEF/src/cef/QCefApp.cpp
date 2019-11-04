@@ -22,17 +22,17 @@ void QCefApp::OnContextInitialized()
     m_contextReady = true;
 }
 
-CefRefPtr<QCefClient> QCefApp::addBrowser()
+CefRefPtr<QCefClient> QCefApp::addBrowser(HWND hwnd)
 {
     if (m_contextReady)
     {
         // Information used when creating the native window.
         CefWindowInfo windowInfo;
-
+        RECT rc = { 0 };
 #if defined(OS_WIN)
         // On Windows we need to specify certain flags that will be passed to
         // CreateWindowEx().
-        windowInfo.SetAsPopup(NULL, "QCefView");
+        windowInfo.SetAsChild(hwnd, rc);
 #endif
 
         // SimpleHandler implements browser-level callbacks.
@@ -48,7 +48,7 @@ CefRefPtr<QCefClient> QCefApp::addBrowser()
         m_clients.enqueue(client);
         return client;
     }
-    return NULL;
+    return nullptr;
 }
 
 void QCefApp::closeAllBrowser()

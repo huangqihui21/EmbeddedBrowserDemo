@@ -1,14 +1,22 @@
 ﻿#include "QCefView.h"
 #include <QMenu>
+#include <QHBoxLayout>
+#include <QEventLoop>
 
-QCefView::QCefView(CefRefPtr<QCefClient> cefClient, QWidget* parent) : QWidget(parent)
+QCefView::QCefView(QWidget* parent) : QWidget(parent)
 {
-    m_cefEmbedded = false;
-    m_cefClient = cefClient;
+    m_cefWindow = new QCefWindow(windowHandle());
 
-    m_cefTimer = new QTimer(this);
-    m_cefTimer->start(10);
-    connect(m_cefTimer, SIGNAL(timeout()), this, SLOT(onCefTimer()));
+    m_cefClient = m_cefWindow->createBrowser();
+    QEventLoop eventLoop;
+    connect(m_cefClient, SIGNAL(browserCreated()),&eventLoop,SLOT(quit()));
+    eventLoop.exec();
+
+    QHBoxLayout *layout = new QHBoxLayout(this);
+    layout->setContentsMargins(0, 0, 0, 0);
+    QWidget* windowContainer = createWindowContainer(m_cefWindow, this);
+    layout->addWidget(windowContainer);
+    setLayout(layout);
 
     QCefClient* cefClientPtr = m_cefClient.get();
     connect(cefClientPtr, SIGNAL(loadStarted(bool)), this, SIGNAL(loadStarted(bool)));
@@ -30,26 +38,6 @@ void QCefView::load(QUrl url)
 void QCefView::reload()
 {
     m_cefClient->reload();
-}
-
-void QCefView::onCefTimer()
-{
-    CefDoMessageLoopWork();
-    if (m_cefEmbedded == false)
-    {
-        CefWindowHandle browserHandle = m_cefClient->browserWinId();
-        if (browserHandle != (CefWindowHandle) -1)
-        {
-            QWindow* subW = QWindow::fromWinId((WId) browserHandle);
-            QWidget* container = QWidget::createWindowContainer(subW, this);
-            QStackedLayout* cefLayout = new QStackedLayout(this);
-            setLayout(cefLayout);
-            container->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-            cefLayout->addWidget(container);
-            m_cefEmbedded = true;
-            emit cefEmbedded();
-        }
-    }
 }
 
 void QCefView::runJavaScript(QString script)

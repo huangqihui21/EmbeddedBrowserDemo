@@ -8,7 +8,6 @@
 
 #include "QCefClient.h"
 #include <QQueue>
-#include <QSslCertificate>
 
 class QCefApp: public CefApp,
         public CefBrowserProcessHandler
@@ -25,7 +24,7 @@ public:
     virtual void OnContextInitialized() OVERRIDE;
 
     //Factory method to create new browser
-    CefRefPtr<QCefClient> addBrowser();
+    CefRefPtr<QCefClient> addBrowser(HWND);
     void closeAllBrowser();
 
    private:

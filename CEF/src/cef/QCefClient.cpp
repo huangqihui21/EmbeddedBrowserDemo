@@ -40,6 +40,8 @@ void QCefClient::OnAfterCreated(CefRefPtr<CefBrowser> browser)
     CEF_REQUIRE_UI_THREAD()
     m_browser = browser;
     m_created = true;
+
+    emit browserCreated();
 }
 
 bool QCefClient::DoClose(CefRefPtr<CefBrowser> browser)
@@ -52,7 +54,7 @@ void QCefClient::OnBeforeClose(CefRefPtr<CefBrowser> browser)
 {
     CEF_REQUIRE_UI_THREAD()
     browser->GetHost()->CloseBrowser(true);
-    m_browser = NULL;
+    m_browser = nullptr;
 }
 
 bool QCefClient::OnSetFocus(CefRefPtr<CefBrowser> browser,
