@@ -1,4 +1,4 @@
-#include "MainDlg.h"
+﻿#include "MainDlg.h"
 #include "ui_MainDlg.h"
 
 #include <QKeyEvent>
@@ -37,7 +37,6 @@ void MainDlg::initWebview(CefRefPtr<QCefApp> cefApp)
     webLayout->setSpacing(0);
     webLayout->setStackingMode(QStackedLayout::StackAll);
 
-    cefApp->enableHttps();
     m_webview = new QCefView(cefApp->addBrowser(), upperFrame);
     m_webview->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     webLayout->addWidget(m_webview);

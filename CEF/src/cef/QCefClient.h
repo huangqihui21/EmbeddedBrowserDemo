@@ -58,8 +58,7 @@ public:
 
     //CefLoadHandler methods:
     virtual void OnLoadStart(CefRefPtr<CefBrowser> browser,
-                             CefRefPtr<CefFrame> frame,
-                             TransitionType transition_type) OVERRIDE;
+                             CefRefPtr<CefFrame> frame) OVERRIDE;
     virtual void OnLoadEnd(CefRefPtr<CefBrowser> browser,
                            CefRefPtr<CefFrame> frame,
                            int httpStatusCode) OVERRIDE;
@@ -85,11 +84,6 @@ public:
                             const CefKeyEvent& event,
                             CefEventHandle os_event) OVERRIDE;
 
-    virtual bool OnCertificateError(CefRefPtr<CefBrowser> browser,
-                                    cef_errorcode_t cert_error,
-                                    const CefString &request_url,
-                                    CefRefPtr<CefSSLInfo> ssl_info,
-                                    CefRefPtr<CefRequestCallback> callback) OVERRIDE;
 
     // CefContextMenuHandler methods:
     virtual void OnBeforeContextMenu(CefRefPtr<CefBrowser> browser,

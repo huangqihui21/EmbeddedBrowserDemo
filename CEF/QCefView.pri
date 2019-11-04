@@ -12,12 +12,17 @@ linux-g++ {
 }
 win32 {
     CONFIG(debug, debug|release){
-        LIBS += libs/win32/debug/libcef.lib \
-            libs/win32/debug/libcef_dll_wrapper.lib
+        LIBS += $$PWD/libs/win32/debug/libcef.lib \
+            $$PWD/libs/win32/debug/libcef_dll_wrapper.lib
     }else{
-        LIBS += libs/win32/release/libcef.lib \
-            libs/win32/release/libcef_dll_wrapper.lib
+        LIBS += $$PWD/libs/win32/release/libcef.lib \
+            $$PWD/libs/win32/release/libcef_dll_wrapper.lib
     }
+}
+
+win32-msvc* {
+    QMAKE_CXXFLAGS *=  /wd"4100"
+    contains (QMAKE_CXXFLAGS_WARN_ON, -w34100) : QMAKE_CXXFLAGS_WARN_ON -= -w34100
 }
 
 QT += core \
@@ -34,8 +39,7 @@ HEADERS += $$PWD/src/cef/QCefDefines.h \
     $$PWD/src/cef/QCefV8Handler.h \
     $$PWD/src/cef/QCefView.h \
     $$PWD/src/cef/QCefClient.h \
-    $$PWD/src/cef/QCefInspector.h \
-    $$PWD/src/cef/QCefSslContext.h
+    $$PWD/src/cef/QCefInspector.h
 
 SOURCES += $$PWD/src/cef/QCefJSDialogHandler.cpp \
     $$PWD/src/cef/QCefContext.cpp \
@@ -44,5 +48,4 @@ SOURCES += $$PWD/src/cef/QCefJSDialogHandler.cpp \
     $$PWD/src/cef/QCefV8Handler.cpp \
     $$PWD/src/cef/QCefView.cpp \
     $$PWD/src/cef/QCefClient.cpp \
-    $$PWD/src/cef/QCefInspector.cpp \
-    $$PWD/src/cef/QCefSslContext.cpp
+    $$PWD/src/cef/QCefInspector.cpp

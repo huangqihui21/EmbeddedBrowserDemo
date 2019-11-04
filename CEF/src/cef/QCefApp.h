@@ -1,4 +1,4 @@
-#ifndef QCEFAPP_H
+﻿#ifndef QCEFAPP_H
 #define QCEFAPP_H
 
 #include "include/cef_app.h"
@@ -9,7 +9,6 @@
 #include "QCefClient.h"
 #include <QQueue>
 #include <QSslCertificate>
-#include "QCefSslContext.h"
 
 class QCefApp: public CefApp,
         public CefBrowserProcessHandler
@@ -29,13 +28,9 @@ public:
     CefRefPtr<QCefClient> addBrowser();
     void closeAllBrowser();
 
-    void enableHttps() { m_httpsEnabled = true; }
-
    private:
     bool m_contextReady;
     QQueue<CefRefPtr<QCefClient> > m_clients;
-    bool m_httpsEnabled;
-    QCefSslContext* m_sslContext;
 
     // Include the default reference counting implementation.
     IMPLEMENT_REFCOUNTING(QCefApp)

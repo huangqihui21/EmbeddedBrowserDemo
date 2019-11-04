@@ -1,4 +1,4 @@
-/*
+﻿/*
  * QCefApp
 * @brief: CefApp接口的实现
 * @author: kevin_yang
@@ -13,9 +13,7 @@ QCefApp::QCefApp()
 
 QCefApp::~QCefApp()
 {
-    if (m_sslContext != NULL) {
-        delete m_sslContext;
-    }
+
 }
 
 void QCefApp::OnContextInitialized()
@@ -39,18 +37,7 @@ CefRefPtr<QCefClient> QCefApp::addBrowser()
 
         // SimpleHandler implements browser-level callbacks.
         CefRefPtr<QCefClient> client(new QCefClient());
-        if (m_httpsEnabled)
-        {
-            if (m_sslContext == NULL)
-            {
-                m_sslContext = new QCefSslContext();
-            }
-            if (m_sslContext->isValid())
-            {
-                QList<QSslCertificate> caCerts = m_sslContext->caCertificates();
-                client->setCaCerts(caCerts);
-            }
-        }
+
         // Specify CEF browser settings here.
         CefBrowserSettings browserSettings;
         std::string url = "data:text/html,chromewebdata";

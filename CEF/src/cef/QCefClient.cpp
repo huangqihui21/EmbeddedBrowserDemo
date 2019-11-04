@@ -37,20 +37,20 @@ bool QCefClient::OnProcessMessageReceived(CefRefPtr<CefBrowser> browser,
 
 void QCefClient::OnAfterCreated(CefRefPtr<CefBrowser> browser)
 {
-    CEF_REQUIRE_UI_THREAD();
+    CEF_REQUIRE_UI_THREAD()
     m_browser = browser;
     m_created = true;
 }
 
 bool QCefClient::DoClose(CefRefPtr<CefBrowser> browser)
 {
-    CEF_REQUIRE_UI_THREAD();
+    CEF_REQUIRE_UI_THREAD()
     return true;
 }
 
 void QCefClient::OnBeforeClose(CefRefPtr<CefBrowser> browser)
 {
-    CEF_REQUIRE_UI_THREAD();
+    CEF_REQUIRE_UI_THREAD()
     browser->GetHost()->CloseBrowser(true);
     m_browser = NULL;
 }
@@ -71,8 +71,7 @@ void QCefClient::OnGotFocus(CefRefPtr<CefBrowser> browser)
 }
 
 void QCefClient::OnLoadStart(CefRefPtr<CefBrowser> browser,
-                         CefRefPtr<CefFrame> frame,
-                         TransitionType transition_type)
+                         CefRefPtr<CefFrame> frame)
 {
     CEF_REQUIRE_UI_THREAD();
     if(loadingCefErrorPage() == false)
@@ -118,36 +117,6 @@ void QCefClient::OnLoadEnd(CefRefPtr<CefBrowser> browser,
     {
         emit loadFinished(true, loadingMainFrame(browser, frame));
     }
-}
-
-bool QCefClient::OnCertificateError(CefRefPtr<CefBrowser> browser,
-                                cef_errorcode_t cert_error,
-                                const CefString &request_url,
-                                CefRefPtr<CefSSLInfo> ssl_info,
-                                CefRefPtr<CefRequestCallback> callback)
-{
-    CEF_REQUIRE_UI_THREAD();
-    CefRefPtr<CefX509Certificate> cefCert = ssl_info->GetX509Certificate();
-    size_t size = cefCert->GetDEREncoded()->GetSize();
-    char* buffer;
-    buffer = (char*)malloc(size + 1);
-    cefCert->GetDEREncoded()->GetData(buffer, size, 0);
-    QByteArray derByte(buffer, size);
-    free(buffer);
-    if(!m_caCerts.isEmpty())
-    {
-        foreach(QSslCertificate cert, m_caCerts)
-        {
-            QByteArray refCert = cert.toDer();
-            if(refCert == derByte)
-            {
-                qDebug() << "服务器证书验证通过！";
-                callback->Continue(true);
-                return true;
-            }
-        }
-    }
-    return false;
 }
 
 void QCefClient::OnLoadError(CefRefPtr<CefBrowser> browser,
