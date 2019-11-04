@@ -22,10 +22,10 @@ private:
 
 private slots:
     void onRecvFromWeb(QString msg);
+    void onNavigate();
 
 private:
     Ui::MainDlg *ui;
-    QCefView* m_webview;
 };
 
 #endif // MAINDLG_H

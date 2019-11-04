@@ -21,22 +21,31 @@ MainDlg::~MainDlg()
 
 void MainDlg::initWebview()
 {
-    QVBoxLayout* boxLayout = new QVBoxLayout(ui->webviewFrame);
-    boxLayout->setContentsMargins(0, 0, 0, 0);
-    boxLayout->setSpacing(16);
+    QCefView* page1 = new QCefView(this);
+    page1->load( QUrl("www.baidu.com"));
+    connect(page1, SIGNAL(webMsgReceived(QString)), this, SLOT(onRecvFromWeb(QString)));
+    ui->tabWidget->addTab(page1, "baidu");
 
-    m_webview = new QCefView(ui->webviewFrame);
-    m_webview->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    boxLayout->addWidget(m_webview);
+    QCefView* page2 = new QCefView(this);
+    page2->load( QUrl("www.sohu.com"));
+    ui->tabWidget->addTab(page2, "sohu");
+    connect(page2, SIGNAL(webMsgReceived(QString)), this, SLOT(onRecvFromWeb(QString)));
 
-    connect(m_webview, SIGNAL(webMsgReceived(QString)), this, SLOT(onRecvFromWeb(QString)));
+    QCefView* page3 = new QCefView(this);
+    page3->load( QUrl("www.sina.com"));
+    ui->tabWidget->addTab(page3, "sina");
+    connect(page3, SIGNAL(webMsgReceived(QString)), this, SLOT(onRecvFromWeb(QString)));
 
-    connect(ui->btnGo, &QPushButton::clicked, this, [this]() {
-        m_webview->load(QUrl(ui->editAddress->text()));
-    });
+    connect(ui->btnGo, SIGNAL(clicked()), this, SLOT(onNavigate()));
 }
 
 void MainDlg::onRecvFromWeb(QString msg)
 {
     QMessageBox::information(this, "Received Message from Web Page", msg);
+}
+
+void MainDlg::onNavigate()
+{
+    QCefView* webView = dynamic_cast<QCefView*>(ui->tabWidget->currentWidget());
+    webView->load(QUrl(ui->editAddress->text()));
 }
